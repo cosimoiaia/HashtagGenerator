@@ -19,8 +19,15 @@ import gensim
 from gensim import corpora
 import string
 import argparse
+import re
 
-
+regex = re.compile(
+        r'^(?:http|ftp)s?://' # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+        r'localhost|' #localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+        r'(?::\d+)?' # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
 
 FLAGS = None
@@ -33,9 +40,29 @@ def main():
     lemma = WordNetLemmatizer()
     path=FLAGS.document
 
-    fd = open(path)
+    text = ''
+    if(re.match(regex, path) != None):
+        import bs4
+        import requests
 
-    text = fd.read()
+        print('url found')
+
+        html = bs4.BeautifulSoup(requests.get(path).text, "html.parser")
+
+        data = html.find_all(text=True)
+        def visible(element):
+            if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+                return False
+            elif re.match('<!--.*-->', str(element.encode('utf-8'))):
+                return False
+            return True
+
+        results = filter(visible, data)
+        text = u" ".join(t.strip() for t in results)
+        print(text)
+    else:
+        text = open(path).read()
+
     
     doc_complete = text.split('\n')
 
@@ -66,7 +93,7 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Python script to extract hashtags from long text based on LDA model from GenSim')
-    parser.add_argument('--document', type=str, required=True, default='', help='Path to the document')
+    parser.add_argument('--document', type=str, required=True, default='', help='Path or URL to the document')
     parser.add_argument('--language', type=str, required=False, default='english', help='Language of the text')
     parser.add_argument('--hashtags', type=int, required=False, default=4, help='Number of hashtags to extract')
     parser.add_argument('--passes', type=int, required=False, default=50, help='Iteration for the LDA model to perform')
