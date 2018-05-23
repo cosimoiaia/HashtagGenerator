@@ -45,7 +45,7 @@ def main():
         import bs4
         import requests
 
-        print('url found')
+        print('[Url found]')
 
         html = bs4.BeautifulSoup(requests.get(path).text, "html.parser")
 
@@ -59,7 +59,6 @@ def main():
 
         results = filter(visible, data)
         text = u" ".join(t.strip() for t in results)
-        print(text)
     else:
         text = open(path).read()
 
