@@ -11,12 +11,17 @@
 #
 #########################################
 
+from __future__ import print_function
+
 from nltk.corpus import stopwords 
 from nltk.stem.wordnet import WordNetLemmatizer
 import gensim
 from gensim import corpora
 import string
 import argparse
+
+
+
 
 FLAGS = None
 
@@ -47,7 +52,15 @@ def main():
     ldamodel = Lda(doc_term_matrix, num_topics=FLAGS.hashtags, id2word = dictionary, passes=FLAGS.passes)
     topic = ldamodel.print_topics(num_topics=5, num_words=5)
 
-    for t in topic: print(t[1])
+    hashtags = []
+    for t in topic: 
+        for h in t[1].split('+'):
+            hashtags.append('#'+h[h.find('"')+1:h.rfind('"')])
+
+    print("HashTags: ")
+    for ht in list(set(hashtags)):
+        print(ht, end=' ')
+    print()
 
 
 
