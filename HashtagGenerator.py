@@ -91,7 +91,7 @@ def main():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Python script to extract hashtags from long text based on LDA model from GenSim')
+    parser = argparse.ArgumentParser(description='Python script to extract hashtags from URL or long text based on LDA model from GenSim')
     parser.add_argument('--document', type=str, required=True, default='', help='Path or URL to the document')
     parser.add_argument('--language', type=str, required=False, default='english', help='Language of the text')
     parser.add_argument('--hashtags', type=int, required=False, default=4, help='Number of hashtags to extract')
