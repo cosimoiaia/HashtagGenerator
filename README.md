@@ -18,3 +18,20 @@ optional arguments:
 ```
 
 
+<b>Example</b>
+
+Url:
+```
+$ ./HashtagGenerator.py --document "https://medium.com/@alet89/understanding-the-gold-rush-of-scalable-and-validated-data-powered-by-blockchain-and-decentralized-ee05db6b6a68"
+[Url found]
+HashTags: 
+#blockchain #technology #algorithm #ai #data #network 
+
+```
+
+Document:
+```
+./HashtagGenerator.py --document document.txt 
+HashTags: 
+#virtual #world #game #reality #headset #company #sensor #vr #facebook #oculus #device 
+```
